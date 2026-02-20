@@ -1,1 +1,142 @@
-<h1>Test</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>WatchMatch - Trouve ta montre parfaite</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #111;
+        color: white;
+        text-align: center;
+        padding: 30px;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: #1e1e1e;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    select, button {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: none;
+    }
+    button {
+        background-color: #d4af37;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .result {
+        margin-top: 20px;
+        text-align: left;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>WatchMatch</h1>
+    <p>Trouve la montre parfaite pour ton poignet</p>
+
+    <label>Style :</label>
+    <select id="style">
+        <option value="classic">Classique</option>
+        <option value="sport">Sport</option>
+        <option value="luxury">Luxe</option>
+        <option value="minimal">Minimaliste</option>
+    </select>
+
+    <label>Budget :</label>
+    <select id="budget">
+        <option value="low">200 - 500€</option>
+        <option value="mid">500 - 2000€</option>
+        <option value="high">2000€+</option>
+    </select>
+
+    <label>Mouvement :</label>
+    <select id="movement">
+        <option value="automatic">Automatique</option>
+        <option value="quartz">Quartz</option>
+    </select>
+
+    <button onclick="findWatch()">Trouver ma montre</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+
+const watches = [
+    {
+        name: "Tissot PRX Powermatic 80",
+        style: "sport",
+        budget: "mid",
+        movement: "automatic",
+        description: "Un excellent rapport qualité/prix avec mouvement automatique suisse et design intégré moderne."
+    },
+    {
+        name: "Seiko Presage Cocktail",
+        style: "classic",
+        budget: "low",
+        movement: "automatic",
+        description: "Une montre élégante avec un cadran travaillé et un mouvement fiable."
+    },
+    {
+        name: "Rolex Datejust",
+        style: "luxury",
+        budget: "high",
+        movement: "automatic",
+        description: "Icône intemporelle, finition exceptionnelle et forte valeur de revente."
+    },
+    {
+        name: "Nomos Tangente",
+        style: "minimal",
+        budget: "mid",
+        movement: "automatic",
+        description: "Design Bauhaus pur avec mouvement manufacture allemand."
+    },
+    {
+        name: "Casio Edifice",
+        style: "sport",
+        budget: "low",
+        movement: "quartz",
+        description: "Montre robuste et pratique pour usage quotidien."
+    }
+];
+
+function findWatch() {
+    const style = document.getElementById("style").value;
+    const budget = document.getElementById("budget").value;
+    const movement = document.getElementById("movement").value;
+
+    let results = watches.filter(w =>
+        w.style === style &&
+        w.budget === budget &&
+        w.movement === movement
+    );
+
+    if (results.length === 0) {
+        results = watches.filter(w => w.style === style);
+    }
+
+    let output = "<h2>Recommandation :</h2>";
+
+    results.slice(0,3).forEach(w => {
+        output += `
+            <p><strong>${w.name}</strong><br>
+            ${w.description}</p>
+            <hr>
+        `;
+    });
+
+    document.getElementById("result").innerHTML = output;
+}
+
+</script>
+
+</body>
+</html>
