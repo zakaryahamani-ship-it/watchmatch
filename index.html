@@ -2,140 +2,148 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>WatchMatch - Trouve ta montre parfaite</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WatchMatch V2</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #111;
-        color: white;
-        text-align: center;
-        padding: 30px;
-    }
-    .container {
-        max-width: 600px;
-        margin: auto;
-        background: #1e1e1e;
-        padding: 20px;
-        border-radius: 10px;
-    }
-    select, button {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-        border: none;
-    }
-    button {
-        background-color: #d4af37;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    .result {
-        margin-top: 20px;
-        text-align: left;
-    }
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #111; margin: 0; padding: 0; }
+    .container { max-width: 800px; margin: 50px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1);}
+    h1 { text-align: center; color: #222; }
+    .question { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type=text], select { width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
+    button { padding: 10px 20px; background-color: #2a2a2a; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #444; }
+    .result { margin-top: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background: #fafafa; }
+    .watch { margin-bottom: 20px; }
+    .watch img { max-width: 100%; border-radius: 5px; }
+    a { color: #1a73e8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
-
 <div class="container">
-    <h1>WatchMatch</h1>
-    <p>Trouve la montre parfaite pour ton poignet</p>
+    <h1>WatchMatch V2</h1>
+    
+    <div id="quiz">
+        <div class="question">
+            <label for="budget">Quel est votre budget ? (ex: 3500 ou 2000-5000)</label>
+            <input type="text" id="budget" placeholder="€">
+        </div>
+        <div class="question">
+            <label for="style">Style préféré</label>
+            <select id="style">
+                <option value="">--Choisissez--</option>
+                <option value="sportive">Sportive / Tool watch</option>
+                <option value="classique">Classique habillée</option>
+                <option value="polyvalente">Polyvalente moderne</option>
+                <option value="contemporaine">Contemporaine design</option>
+            </select>
+        </div>
+        <div class="question">
+            <label for="mouvement">Mouvement préféré</label>
+            <select id="mouvement">
+                <option value="">--Choisissez--</option>
+                <option value="auto">Automatique / mécanique</option>
+                <option value="quartz">Quartz</option>
+                <option value="any">Peu importe</option>
+            </select>
+        </div>
+        <div class="question">
+            <label for="usage">Usage principal</label>
+            <select id="usage">
+                <option value="">--Choisissez--</option>
+                <option value="quotidien">Quotidien / bureau</option>
+                <option value="sport">Sport / aventure</option>
+                <option value="habille">Événement / habillé</option>
+                <option value="collection">Collection / passion</option>
+            </select>
+        </div>
+        <div class="question">
+            <label for="poignet">Taille du poignet (optionnel, cm)</label>
+            <input type="text" id="poignet" placeholder="cm">
+        </div>
+        <button onclick="runQuiz()">Voir ma montre</button>
+    </div>
 
-    <label>Style :</label>
-    <select id="style">
-        <option value="classic">Classique</option>
-        <option value="sport">Sport</option>
-        <option value="luxury">Luxe</option>
-        <option value="minimal">Minimaliste</option>
-    </select>
-
-    <label>Budget :</label>
-    <select id="budget">
-        <option value="low">200 - 500€</option>
-        <option value="mid">500 - 2000€</option>
-        <option value="high">2000€+</option>
-    </select>
-
-    <label>Mouvement :</label>
-    <select id="movement">
-        <option value="automatic">Automatique</option>
-        <option value="quartz">Quartz</option>
-    </select>
-
-    <button onclick="findWatch()">Trouver ma montre</button>
-
-    <div class="result" id="result"></div>
+    <div id="result" class="result" style="display:none;"></div>
 </div>
 
 <script>
-
 const watches = [
-    {
-        name: "Tissot PRX Powermatic 80",
-        style: "sport",
-        budget: "mid",
-        movement: "automatic",
-        description: "Un excellent rapport qualité/prix avec mouvement automatique suisse et design intégré moderne."
-    },
-    {
-        name: "Seiko Presage Cocktail",
-        style: "classic",
-        budget: "low",
-        movement: "automatic",
-        description: "Une montre élégante avec un cadran travaillé et un mouvement fiable."
-    },
-    {
-        name: "Rolex Datejust",
-        style: "luxury",
-        budget: "high",
-        movement: "automatic",
-        description: "Icône intemporelle, finition exceptionnelle et forte valeur de revente."
-    },
-    {
-        name: "Nomos Tangente",
-        style: "minimal",
-        budget: "mid",
-        movement: "automatic",
-        description: "Design Bauhaus pur avec mouvement manufacture allemand."
-    },
-    {
-        name: "Casio Edifice",
-        style: "sport",
-        budget: "low",
-        movement: "quartz",
-        description: "Montre robuste et pratique pour usage quotidien."
-    }
+    {name:"Tissot PRX Powermatic 80", brand:"Tissot", price:650, style:"sportive", movement:"auto", usage:"quotidien", image:"https://www.tissotwatches.com/media/catalog/product/cache/1/image/600x/040ec09b1e35df139433887a97daa66f/p/r/prx_powermatic_80_t137_407_11_041_00.png", image3D:null, link:"https://www.tissotwatches.com/en-us/tissot-prx-powermatic-80.html", note:"Calibre automatique fiable, boîtier acier adapté au quotidien."},
+    {name:"Hamilton Khaki Field Automatic", brand:"Hamilton", price:600, style:"sportive", movement:"auto", usage:"quotidien", image:"https://www.hamiltonwatch.com/on/demandware.static/-/Sites-hamilton-master-catalog/default/dw8d4d6d40/images/H70555533.png", image3D:null, link:"https://www.hamiltonwatch.com/en-us/h70555533-khaki-field-auto.html", note:"Montre robuste et polyvalente, calibre mécanique éprouvé."},
+    {name:"Longines HydroConquest", brand:"Longines", price:2000, style:"sportive", movement:"auto", usage:"sport", image:"https://www.longines.com/media/catalog/product/cache/1/image/600x/h/y/hydroconquest.png", image3D:"https://www.longines.com/en-us/watches/hydroconquest-3D", link:"https://www.longines.com/en-us/watches/hydroconquest", note:"Plongeuse fiable avec lunette céramique, idéale pour sports nautiques."},
+    {name:"Nomos Tangente 38", brand:"Nomos", price:3600, style:"classique", movement:"auto", usage:"habille", image:"https://nomos-glashuette.com/media/catalog/product/cache/1/image/600x/t/a/tangente38.png", image3D:null, link:"https://nomos-glashuette.com/en/tangente-38", note:"Design minimaliste allemand, calibre mécanique fiable."},
+    {name:"Omega Seamaster Aqua Terra 150m", brand:"Omega", price:5200, style:"polyvalente", movement:"auto", usage:"quotidien", image:"https://www.omegawatches.com/media/catalog/product/1/5/150m.png", image3D:"https://www.omegawatches.com/en-us/3d/omega-seamaster-aqua-terra", link:"https://www.omegawatches.com/en-us/watches/seamaster-aqua-terra-150m", note:"Calibre automatique certifié METAS, polyvalente et élégante."},
+    {name:"Jaeger-LeCoultre Reverso Classic Large", brand:"Jaeger-LeCoultre", price:8800, style:"classique", movement:"auto", usage:"habille", image:"https://www.jaeger-lecoultre.com/media/reverso-classic-large.png", image3D:null, link:"https://www.jaeger-lecoultre.com/en/reverso-classic-large.html", note:"Iconique et élégante, mouvement mécanique éprouvé."},
+    {name:"Vacheron Constantin Fiftysix Automatic", brand:"Vacheron Constantin", price:14000, style:"polyvalente", movement:"auto", usage:"quotidien", image:"https://www.vacheron-constantin.com/media/fiftysix-automatic.png", image3D:"https://www.vacheron-constantin.com/en-us/3d/fiftysix-automatic", link:"https://www.vacheron-constantin.com/en-us/watches/fiftysix-automatic", note:"Haute horlogerie discrète, calibre fiable et esthétique raffinée."},
+    {name:"A. Lange & Söhne Saxonia Thin", brand:"A. Lange & Söhne", price:21000, style:"classique", movement:"auto", usage:"habille", image:"https://www.alange-soehne.com/media/saxonia-thin.png", image3D:null, link:"https://www.alange-soehne.com/en/saxonia-thin", note:"Élégance allemande, calibre manufacture finement décoré."},
+    {name:"IWC Portugieser Automatic", brand:"IWC", price:12500, style:"polyvalente", movement:"auto", usage:"quotidien", image:"https://www.iwc.com/media/portugieser-automatic.png", image3D:"https://www.iwc.com/en-us/3d/portugieser-automatic", link:"https://www.iwc.com/en-us/watches/portugieser-automatic", note:"Icône IWC, mouvement automatique et grande lisibilité."},
+    {name:"Rolex Oyster Perpetual 36", brand:"Rolex", price:6000, style:"polyvalente", movement:"auto", usage:"quotidien", image:"https://www.rolex.com/media/oyster-perpetual-36.png", image3D:"https://www.rolex.com/en-us/3d/oyster-perpetual-36", link:"https://www.rolex.com/watches/oyster-perpetual/m126000-0000.html", note:"Rolex classique, calibre automatique maison, polyvalence garantie."}
 ];
 
-function findWatch() {
-    const style = document.getElementById("style").value;
-    const budget = document.getElementById("budget").value;
-    const movement = document.getElementById("movement").value;
-
-    let results = watches.filter(w =>
-        w.style === style &&
-        w.budget === budget &&
-        w.movement === movement
-    );
-
-    if (results.length === 0) {
-        results = watches.filter(w => w.style === style);
+function parseBudget(input){
+    if(input.includes("-")){
+        let parts = input.split("-");
+        return {min: parseInt(parts[0].trim()), max: parseInt(parts[1].trim())};
+    } else {
+        let value = parseInt(input.trim());
+        return {min: value, max: value};
     }
-
-    let output = "<h2>Recommandation :</h2>";
-
-    results.slice(0,3).forEach(w => {
-        output += `
-            <p><strong>${w.name}</strong><br>
-            ${w.description}</p>
-            <hr>
-        `;
-    });
-
-    document.getElementById("result").innerHTML = output;
 }
 
+function runQuiz(){
+    const budgetInput = document.getElementById("budget").value;
+    const styleInput = document.getElementById("style").value;
+    const mouvInput = document.getElementById("mouvement").value;
+    const usageInput = document.getElementById("usage").value;
+    const poignetInput = document.getElementById("poignet").value;
+
+    if(!budgetInput || !styleInput || !mouvInput || !usageInput){
+        alert("Merci de répondre à toutes les questions obligatoires !");
+        return;
+    }
+
+    const budget = parseBudget(budgetInput);
+
+    // Filtrage progressif
+    let filtered = watches.filter(w => w.price >= budget.min && w.price <= budget.max);
+    filtered = filtered.filter(w => w.style === styleInput);
+    if(mouvInput !== "any") filtered = filtered.filter(w => w.movement === mouvInput);
+    filtered = filtered.filter(w => w.usage === usageInput);
+
+    if(filtered.length === 0){
+        document.getElementById("result").style.display="block";
+        document.getElementById("result").innerHTML="<p>Aucune montre ne correspond exactement à vos critères.</p>";
+        return;
+    }
+
+    // Choix principal et alternative
+    const mainWatch = filtered[0];
+    const altWatch = filtered[1] || filtered[0];
+
+    // Affichage
+    let html = `
+        <div class="watch">
+            <h2>Modèle recommandé : ${mainWatch.name}</h2>
+            <img src="${mainWatch.image}" alt="${mainWatch.name}">
+            ${mainWatch.image3D ? `<p><a href="${mainWatch.image3D}" target="_blank">Vue 3D disponible</a></p>` : ""}
+            <p>${mainWatch.note}</p>
+            <p><a href="${mainWatch.link}" target="_blank">Découvrir chez la manufacture</a></p>
+        </div>
+        <div class="watch">
+            <h2>Alternative : ${altWatch.name}</h2>
+            <img src="${altWatch.image}" alt="${altWatch.name}">
+            ${altWatch.image3D ? `<p><a href="${altWatch.image3D}" target="_blank">Vue 3D disponible</a></p>` : ""}
+            <p>${altWatch.note}</p>
+            <p><a href="${altWatch.link}" target="_blank">Découvrir chez la manufacture</a></p>
+        </div>
+    `;
+
+    document.getElementById("quiz").style.display = "none";
+    document.getElementById("result").style.display = "block";
+    document.getElementById("result").innerHTML = html;
+}
 </script>
 
 </body>
